@@ -37,6 +37,7 @@ If you are about to write instructions in a README file, you might want to do it
     Download <a href="https://drive.google.com/file/d/1Kyoyira0liRRr_FOY8DDSeATLQAwXtu-/view?usp=sharing">kaist_thermal_detector.weights</a> or <a href="https://drive.google.com/file/d/1xx4nhja95VeFsZydTycD8ArTYl1p-bnx/view?usp=sharing">flir_detector.weights </a> files and put in the directory 'weights'.
    
 4. **Dependencies**
+
    Run the following command to install all dependencies
    ```bash
    pip install -r requirements.txt
