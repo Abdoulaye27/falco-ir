@@ -1,83 +1,161 @@
-# IR-FALCO
+# Another Implementation of YOLOv3 with Pytorch
+## Training YOLOv3 on KAIST and FLIR dataset for Pedestrian Detection task in Thermal Imagery.
+### This work is for our Best Student Paper Honorable Mention Award at ICIAP 2019 with the title: 
 
-Our research focuses on designing and implementing an autonomous target detection framework that optimally alerts the operator. This alert is based on the performance history of the detector within the current mission environment and considers the limitations and capabilities of the system.
+<a href="https://www.researchgate.net/publication/335603374_Domain_Adaptation_for_Privacy-Preserving_Pedestrian_Detection_in_Thermal_Imagery"> Domain Adaptation for Privacy-Preserving Pedestrian Detection in Thermal Imagery </a>
 
-## Framework Overview
+### And our ACM TOMM journal 2020 with the title: 
 
-The framework comprises a IR-detector (YOLOv3) that produce confidence scores—the scores are inputs for a Partially Observable Markov Decision Process (POMDP)-based False Alert Filter.
+<a href="https://www.researchgate.net/publication/343262725_Bottom-up_and_Layer-wise_Domain_Adaptation_for_Pedestrian_Detection_in_Thermal_Images"> Bottom-up and Layer-wise Domain Adaptation for Pedestrian Detection in Thermal Images </a>
 
-The False Alert Filter is responsible for commanding the operational autonomy of the robotic system during missions. Depending on the level of confidence and environmental calculus, it may instruct the robotic system to continue with the mission, gather more informative data, or alert the operator.
+ 
+This repository is forked from great work pytorch-yolov3 of <a href="https://github.com/andy-yun/pytorch-0.4-yolov3">@github/andy-yun </a> 
+. However, this repository is changed many files and functions for our research.
 
-## Repository Structure and File Description 
+### Improvement of this repository
+* Developed a state-of-the-art result for Pedestrian detection task on KAIST and FLIR dataset.
+* Improved training procedures such as savelog, savemodel, continue train from model.
+* Added implementation of Bottom-up adaptation and Layer-wise adaptation.
+* Added cross-validation during training by setting 10% of validation set and 90% of training set.
+* Added training procedure to decay learning rate by training loss and validation recall.
+* Added calculation mean Average Precision (mAP) and Log Average Miss Rate (Miss rate) on daytime and nighttime of KAIST dataset. 
+* Added drawing bounding boxes on images based on detection results and ground-truth annotation.
+* Added function to convert YOLO output result to JSON format for evaluation miss rate.
+* Added monitor the training loss and validation performance during training. 
+* Added functions detection on a folder or from a video.
 
-Inside this repository, you will find a variety of files necessary to get our project framework up and running. Here's a quick guide to navigate them:
+### How to run this repository
+1. Download or clone this repository to your computer.
+2. Install some basic requirements if needed.
+3. Download <a href="https://drive.google.com/file/d/1Kyoyira0liRRr_FOY8DDSeATLQAwXtu-/view?usp=sharing">kaist_thermal_detector.weights</a> or <a href="https://drive.google.com/file/d/1xx4nhja95VeFsZydTycD8ArTYl1p-bnx/view?usp=sharing">flir_detector.weights </a> files and put in the directory 'weights'.
+4. Open a terminal and run following commands according to functions:
 
-- **falco_function.jl**: This julia file contains the POMDP-based False Alert Filter which takes the confidence score as an input. That function is called in the Python script processing videos and detecting targets.
-The `generate_action()` function is a critical method included in the "falco_function.jl" Julia file. This function uses the SARSOP policy from a previously computed policy stored in the `policy.out` file to generate an action based on the current belief state and observation, which in this case is the confidence score from the object detection. The function takes the confidence score as input and uses it along with the current belief state to decide on the optimal action: it can either alert the operator (action = 1), gather more information (action = 2), or continue the mission (action = 3). After determining the selected action, the function updates the belief state based on the given observation. The updated belief state and the chosen action are then returned by the function.
+Noted that all of these instructions for Linux environment (for Windows, you should visit original repository to read more)
 
-- **detect.py**: This Python file performs object detection in a live video stream (from a webcam or an RTSP feed). It uses the Yolov3 model for object detection. Detected objects are displayed in the live video stream and corresponding information (object name, confidence score, bounding box) is stored in a dictionary.
-
-- **policy.out**: The policy.out file is where the SARSOP-generated policy is saved. A POMDP policy defines the action the agent should perform (in this case, whether to alert the operator, gather more information, or continue the mission), depending on its belief state. The policy.out file essentially contains the decisions or actions that the system should take under different states and observations.
-
-## How to launch IR-FALCO
-
-If you are about to write instructions in a README file, you might want to do it as follows:
-
-1. **Clone the repository**
-    ```bash
-    git clone https://github.com/Abdoulaye27/falco-ir.git
-    ```
-2. **Navigate to the cloned folder**
-    ```bash
-    cd /path/to/cloned_folder
-    ```
-    Replace '/path/to/cloned_folder' with the path where the cloned folder resides.
-3. **Download KAIST or FLIR weights in the cloned folder**
-
-    Download <a href="https://drive.google.com/file/d/1Kyoyira0liRRr_FOY8DDSeATLQAwXtu-/view?usp=sharing">kaist_thermal_detector.weights</a> or <a href="https://drive.google.com/file/d/1xx4nhja95VeFsZydTycD8ArTYl1p-bnx/view?usp=sharing">flir_detector.weights </a> files and put in the directory 'weights'.
-   
-4. **Dependencies**
-
-   Run the following command to install all dependencies
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. **Chose your camera feed input**
-   
-   If you want to use your default camera, do in `detect.py`:
-    ```bash
-    cap = cv2.VideoCapture(0)
-    ```
-    If you want to use Real Time Streaming Protocol (RTSP), do in `detect.py`:
-    ```bash
-    cap = cv2.VideoCapture("<rtsp_url>")
-    ------------------------------------------------------------------------------------
-    Example: rtsp_url = rtsp://rinao:unicorn@192.168.1.5:8554/streaming/live/1
-    cam_feed = cv2.VideoCapture("rtsp://rinao:unicorn@192.168.1.5:8554/streaming/live/1")
-    ```
-    If you want to use Real Time Messaging Protocol (RTMP), do in `detect.py`:
-    ```bash
-    cap = cv2.VideoCapture("<rtmp_url>")
-    ------------------------------------------------------------------------------------
-    Example: rtsp_url = rtmp://myip:1935/myapp/mystream
-    cap = cv2.VideoCapture("rtmp://myip:1935/myapp/mystream")
-    ```
-6. **Run the autonomous detection framework**
-   ```bash
-   python detection.py
-   ```
-   If you want to stop the program, click on the display screen then type "q" or "ESC".
-   
-## Requirements
-
-Python: `Python 3.7.6`
-
-You can find all the librairies in the `requirements.txt` file.
-
-## Acknowledgements
-
-<details><summary> <b>Expand</b> </summary>
-
-* [https://github.com/mrkieumy/YOLOv3_PyTorch](https://github.com/mrkieumy/YOLOv3_PyTorch)
+### Some default parameters:
+* weightfile = weights/kaist_thermal_detector.weights 
+* configurationfile = cfg/yolov3_kaist.cfg 
+* datafile = data/kaist.data
+* listname = data/kaist_person.names
+For all of following commands, if command with [...] will be an option,
+you can use your parameter or leave there to use default paramaters above.
 
 
+### Detection (detect bounding box):
+Detect bounding box result on image(s) or video by parameter: 
+image file or folder with all images or video file. 
+The result will appear with the same name + 'predicted'
+```
+python detect.py image/video/folder
+Example:
+python detect.py thermal_kaist.png
+```
+
+### Test mAP (mean Average Precision):
+Test mean Average Precision as well as Log Average Miss Rate of the detector over the test set
+Noted that, Log Average Miss Rate and Precision on daytime and nighttime only on KAIST dataset.
+```
+python map.py weightfile
+```
+
+### Evaluation PR (precision, recall, corrects, fscore):
+```
+python eval.py [weightfile]
+```
+
+### Draw bounding box:
+Given the folder of images with its annotation.
+Drawing bounding box on every image with correct detection (blue boxes),
+wrong detection (red boxes) and miss detection (green boxes)
+
+```
+python drawBBxs.py imagefolder
+```
+
+### Train your own data or KAIST data as follows:
+Before training on KAIST or FLIR or your own dataset, you should prepare some steps as follow:
+1. Dataset (download <a href="https://drive.google.com/file/d/14A3K2IPPPC8-BwPh-YjeHARaZqjnR655/view?usp=sharing">KAIST_dataset </a> and place on any directory (better at root or in current directory))
+2. Modify the link to dataset at data/train_thermal.txt and test_thermal.txt.
+3. Check some parameters in configuration files: data/kaist.data, cfg/yolov3_kaist.cfg such as train on thermal or visible, learning rate, etc,. 
+
+Then you can run experiments.
+```
+python train.py [-x y]
+```
+With -x and y as follow:
+* -e: epoch (y is the number of epoch), defaut 50 epochs.
+* -w: weightfile (y is the path of your weight file for pre-train), default kaist_thermal_detector.weights
+* -d: datafile (y is the path of your data file), default data/kaist.data train on thermal images.
+* -c: cfgfile (y is the path of your cfg file), default cfg/yolov3_kaist.cfg with lr=0.001
+
+For example, if you want to train from yolov3 weight for a maximum of 100 epochs, you have:
+```
+python train.py -w weights/yolov3.weights -e 100 
+```
+
+* Weight and model files are saved in a backup folder at each epoch, and log of training saved in savelog.txt
+
+* You __should__ notice that you can control everything in train.py
+
+
+### Monitor loss during training:
+See the loss curve during training, also precision, recall curve for every epoch
+
+```
+python seeloss.py
+```
+
+
+### Demo on webcam:
+
+```
+python demo.py
+```
+
+
+### Example results:
+![Image detection](screenshot/thermal_kaist_predicted.jpg)
+
+[![Video detection](screenshot/thermal_video.gif)](https://youtu.be/FB4fYIIMhX0 "Click to play on Youtube.com")
+
+### Results:
+KAIST dataset:
+* mean Average Precision (mAP): 60.7%
+* Precision day & night: 82.36%	     Precision daytime: 77.44% 	    Precision nighttime: 92.76% 
+* Miss rate day & night: 25.61% 	 Miss rate daytime: 32.69% 	    Miss rate nighttime: 10.87% 
+
+FLIR dataset results (precision):
+* person:    	75.6%
+* bicycle:   	57.4%
+* car:         	86.5%
+
+mean Average Precision:  	73.2%
+
+Noted that, this result is updated recently in our new paper (will be available soon), different with our ICIAP 2019 paper.
+
+## Citation
+We really hope this repository is useful for you. Please cite our paper as
+```
+@inproceedings{kieu2019domain,
+	Author = {Kieu, My and Bagdanov, Andrew D and Bertini, Marco and Del Bimbo, Alberto},
+	Booktitle = {Proc. of International Conference on Image Analysis and Processing (ICIAP)},
+	Title = {Domain Adaptation for Privacy-Preserving Pedestrian Detection in Thermal Imagery},
+	Year = {2019}
+	}
+```
+
+If you use our Layer-wise method, please cite our paper as
+```
+@inproceedings{kieu2020layerwise,
+	Author = {Kieu, My and Bagdanov, Andrew D and Bertini, Marco},
+	Booktitle = {ACM Transactions on Multimedia Computing Communications and Applications (ACM TOMM)},
+	Title = {Bottom-up and Layer-wise Domain Adaptation for Pedestrian Detection in Thermal Images},
+	Year = {2020}
+	}
+```
+
+If you have any comment or question to contribute, please leave it in Issues.
+
+Other question, please contact me by email: my.kieu@unifi.it.
+
+Thank you.
