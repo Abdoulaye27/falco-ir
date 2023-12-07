@@ -78,6 +78,6 @@ You can find all the librairies in the `requirements.txt` file.
 
 <details><summary> <b>Expand</b> </summary>
 
-* [https://github.com/OlafenwaMoses/ImageAI](https://github.com/OlafenwaMoses/ImageAI)
+* [https://github.com/mrkieumy/YOLOv3_PyTorch](https://github.com/mrkieumy/YOLOv3_PyTorch)
 
 
