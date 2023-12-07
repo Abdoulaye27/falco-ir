@@ -69,7 +69,7 @@ If you are about to write instructions in a README file, you might want to do it
    
 ## Requirements
 
-Python: `Python 3.8.10`
+Python: `Python 3.7.6`
 
 You can find all the librairies in the `requirements.txt` file.
 
