@@ -31,7 +31,7 @@ def demo(cfgfile, weightfile):
     if use_cuda:
         m.cuda()
 
-    cap = cv2.VideoCapture("infraOrbit.mp4")
+    cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Unable to open camera")
         exit(-1)
