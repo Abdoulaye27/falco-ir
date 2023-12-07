@@ -32,11 +32,8 @@ If you are about to write instructions in a README file, you might want to do it
     cd /path/to/cloned_folder
     ```
     Replace '/path/to/cloned_folder' with the path where the cloned folder resides.
-3. **Download RGB-YOLO weights in the cloned folder**
-    ```bash
-    https://drive.google.com/drive/folders/1dicOWSAtrVBVZ9JX94gTCl-clzZJ3_im?usp=sharing
-    ```
-    The YOLO weights are stored in the `yolo_weights.h5` file. Make sure to download in the cloned folder containing the following files: `falco_function.jl`, `detection_imagePub.py`, and `policy.out`.
+3. **Download KAIST or FLIR weights in the cloned folder**
+    Download <a href="https://drive.google.com/file/d/1Kyoyira0liRRr_FOY8DDSeATLQAwXtu-/view?usp=sharing">kaist_thermal_detector.weights</a> or <a href="https://drive.google.com/file/d/1xx4nhja95VeFsZydTycD8ArTYl1p-bnx/view?usp=sharing">flir_detector.weights </a> files      and put in the directory 'weights'.
 4. **Dependencies**
    Run the following command to install all dependencies
    ```bash
