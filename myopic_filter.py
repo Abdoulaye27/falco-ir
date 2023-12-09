@@ -15,7 +15,7 @@ def bayes_filter(confidence_score):
     Pr_P = 0.5  # Probability of finding a person based on mission scenario
     Pr_BB = 0.4  # Probability of observing a bounding box
 
-    Pr_P_BB = confidence_score  # Probability that there is a person present given the observation of a bounding box
+    Pr_P_BB = (confidence_score * Pr_P) / Pr_BB  # Probability that there is a person present given the observation of a bounding box
     Pr_NP_BB = 1 - Pr_P_BB  # Probability that there is no person present given the observation of a bounding box
 
     DA = Pr_NP_BB * R_NP_DA + Pr_P_BB * R_P_DA  # Continue mission reward model
